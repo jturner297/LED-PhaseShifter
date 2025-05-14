@@ -8,18 +8,6 @@
 * @author: Justin Turner
 * @corresponding author: Jesse Garcia
 * @version 1.9
-* ------------------------------------------------------------------------------------------------
-*  Interrupts Lab
-*  			Sixteen external LEDs and two pushbutton switches are connected to the NUCLEO-L476RG
-* 		development board. Multiple modes of operation are provided.
-* 			The first mode of operation is called FLASH_LED_MODE. In this mode, the LEDs blink in
-* 		an alternating pattern, with the left and right sets of LEDs taking turns being lit.
-* 		While in this mode, pressing the right button doubles the speed, while pressing the left
-* 		button halves the speed.
-* 			The second mode of operation is called MOVE_LED_MODE. In this mode, a single lit LED will
-* 		shift once, either left or right, depending on the corresponding button press.
-* 			Changing modes is achieved by pressing both buttons simultaneously.
-* 		Note: A software debounce is used to ensure clean button presses.
 **************************************************************************************************
 */
 const uint32_t FLASHfrequency[] = {1, 2, 4, 8, 16};
@@ -45,11 +33,10 @@ struct Light_Emitting_Diode LEDS[] = { //declaring the array of LEDS
 // configure_LEDS()
 //
 // @parm:   *port = GPIOx
-//			pins[] = Array containing the port pin numbers used
+//	    pins[] = Array containing the port pin numbers used
 //          number_of_pins = Number of port pins used
-//			port_clock_num = The number associated with the port clock "0 for port A"
+//	    port_clock_num = The number associated with the port clock "0 for port A"
 // @return: none
-//
 // 		Conveniently configures multiple LEDs at once. Also assists with board wire management.
 //================================================================================================
 void configure_LEDS (GPIO_TypeDef *port, uint32_t pins[], uint32_t number_of_pins, uint32_t port_clock_num)
@@ -72,7 +59,7 @@ void configure_LEDS (GPIO_TypeDef *port, uint32_t pins[], uint32_t number_of_pin
 // 		Setups 2 external push button switches at PA4 and PA1 for input. Also configures external
 //		interrupts for pins 4 and 1
 //
-//  	Note: Left Button = PA4, Right Button = PA1
+//  		Note: Left Button = PA4, Right Button = PA1
 //================================================================================================
 void configure_external_switches(void)
 {
@@ -121,7 +108,6 @@ void configureSysTickInterrupt(void)
 {
 	SysTick->CTRL = 0; //disable SysTick timer
 	NVIC_SetPriority(SysTick_IRQn, 7); //set priority level at 7
-	//SysTick->LOAD = FLASHfrequency[speeds]; //set the counter reload value
 	SysTick->LOAD = 3999; //set the counter reload value 1ms
 	SysTick->VAL = 0; //reset SysTick timer value
 	SysTick->CTRL |= SysTick_CTRL_CLKSOURCE_Msk; //use system clock
@@ -133,14 +119,21 @@ void configureSysTickInterrupt(void)
 // @parm: ReloadValue = Value used in the ARR (determines delay)
 // @return: none
 //
-// 		Updates the SysTick speed
+// 		Updates the ARR value and resets the counter
 //================================================================================================
 void updateARR (uint32_t ReloadValue){
 	  TIM2->ARR = ((cntclk/ReloadValue) - 1); //update SysTick load register
 	  TIM2->CNT = 0;
 }
 
-
+//================================================================================================
+// configureTIM2()
+//
+// @parm: none
+// @return: none
+//
+// 		Configures the general purpose timer TIM2
+//================================================================================================
 void configureTIM2 (void)
 {
 	  RCC->APB1ENR1 |= (1 << 0);  // Enable TIM2 clock
@@ -186,7 +179,6 @@ int main(void)
 				switch(button.choice){
 
 				case Left_Pushed: //left button pressed
-					if (LeftButtonPressed){ //(DOUBLE CHECKING)if the left button is still pressed...
 						if (system_state == FLASH_LED_MODE && speeds > 0){//if the system in FLASH_LED_MODE....
 							updateARR(FLASHfrequency[speeds-=1]);//Half Speed
 						}
@@ -198,12 +190,10 @@ int main(void)
 							else{ //the LEDcount is 0....
 								LEDS[15].port-> ODR &= ~(0x1 << LEDS[15].pin); //turn off the sixteenth LED
 							}
-						}
-					}
+						}					
 					break;
 
 				case Right_Pushed: //right button pressed
-					if (RightButtonPressed){ //(DOUBLE CHECKING)if the right button is still pressed...
 						if (system_state == FLASH_LED_MODE && speeds < 4){//if the system in FLASH_LED_MODE....
 							updateARR(FLASHfrequency[speeds+=1]);//Double Speed
 						}
@@ -217,12 +207,10 @@ int main(void)
 							}
 
 						}
-					}
+					
 					break;
 
 				case Special_Pushed: //Special button pressed
-
-					if (SpecialButtonPressed){
 					for(uint32_t z = 1; z < NUM_of_LEDS; z++){
 						LEDS[z].port-> ODR &= ~(0x1 << LEDS[z].pin);//turn off every LED except the first
 					}
@@ -235,13 +223,6 @@ int main(void)
 					if (system_state == FLASH_LED_MODE) { //if the system_state has changed to FLASJ_LED_MODE....
 					    TIM2->CNT = 0; //restart the count
 					    TIM2->EGR |= (1 << 0);  // force update event /manual trigger
-					}
-					/*if (system_state == FLASH_LED_MODE) {
-					    for (uint32_t i = 0; i < 8; i++) {
-					        LEDS[i].port->ODR |= (0x1 << LEDS[i].pin); // light up right side LEDs immediately
-					    }
-					}*/
-
 					}
 					break;
 				}//end switch statement
@@ -267,9 +248,7 @@ int main(void)
 // @parm: none
 // @return: none
 //
-// 		Once the left button is pressed and this interrupt triggers, the first thing it does is
-//		poll for a right button press, if that is the case, the button choice is flagged as
-//      "Both_Pushed". If not the button choice is flagged as "Left_Pushed", a single left button
+// 	 	Button choice is flagged as "Left_Pushed", a single left button
 //		press. Now with the button choice locked in, the button can begin debouncing.
 //
 //================================================================================================
@@ -289,9 +268,7 @@ void EXTI4_IRQHandler(void)
 // @parm: none
 // @return: none
 //
-// 		Once the right button is pressed and this interrupt triggers, the first thing it does is
-//		poll for a left button press, if that is the case, the button choice is flagged as
-//      "Both_Pushed". If not the button choice is flagged as "Right_Pushed", a single right button
+// 	 	Button choice is flagged as "Right_Pushed", a single right button
 //		press. Now with the button choice locked in, the button can begin debouncing.
 //
 //================================================================================================
@@ -305,6 +282,16 @@ void EXTI1_IRQHandler(void)
 	}
 }
 
+//================================================================================================
+// EXTI1_IRQHandler()
+//
+// @parm: none
+// @return: none
+//
+// 		Button choice is flagged as "Special_Pushed", a single specia button
+//		press. Now with the button choice locked in, the button can begin debouncing.
+//
+//================================================================================================
 void EXTI15_10_IRQHandler(void)
 {
 	if (EXTI->PR1 & (0x1 << 13)) { //if the interrupt flag is set....
@@ -320,13 +307,22 @@ void EXTI15_10_IRQHandler(void)
 // @parm: none
 // @return: none
 //
-// 		When the left 8 LEDs are lit, the other half are off. Every time the SysTick triggers
-//		one side's LEDs will light up while the other's will turn off.
+// 		Increments msTimer variable
 //================================================================================================
 void SysTick_Handler(void)
 {
 	msTimer++; //goes up every 1ms
 }
+
+//================================================================================================
+// TIM2_IRQHandler()
+//
+// @parm: none
+// @return: none
+//
+// 		When the left 8 LEDs are lit, the other half are off. Every time the TIM2 interrupt 
+//		triggers one side's LEDs will light up while the other's will turn off.
+//================================================================================================
 void TIM2_IRQHandler(void)
 {
     if (TIM2->SR & (1 << 0)) {

@@ -30,11 +30,7 @@
 
 #define SYS_CLK_FREQ 4000000// default frequency of the device = 4 MHZ
 #define cntclk 1000
-#define one_hz_speed ((cntclk / 1) - 1 )//value for 1HZ speed
-#define two_hz_speed ((cntclk / 2) - 1 )//value for 2HZ speed
-#define four_hz_speed ((cntclk / 4) - 1 )//value for 4HZ speed
-#define eight_hz_speed ((cntclk / 8) - 1 )//value for 8HZ speed
-#define sixteen_hz_speed ((cntclk / 16) - 1 )//value for 16HZ speed
+
 
 
 #define DEBOUNCE_DELAY 50//arbitrary value that provided an appropriate delay while still being responsive

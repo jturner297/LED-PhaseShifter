@@ -4,9 +4,9 @@
 
 A real-time LED control project for the **STM32L476RG**, using interrupts, SysTick, and GPIO to control 16 external LEDs. Includes two operation modes: **Flash Mode** for automatic LED animation, and **Move Mode** for manual LED shifting using button inputs.
 
----
 
-## 🎥 Demos
+
+## Demos
 <table>
   <tr>
     <td>
@@ -26,9 +26,9 @@ A real-time LED control project for the **STM32L476RG**, using interrupts, SysTi
   </tr>
 </table>
 
----
 
-## ⚙️ Features
+
+## Features
 
 🔄 **Dual Operating Modes**  
 - **Flash Mode** – LEDs flash in an alternating left/right pattern with adjustable frequency (1 Hz to 16 Hz).  
@@ -56,9 +56,9 @@ A real-time LED control project for the **STM32L476RG**, using interrupts, SysTi
 🧪 **Bare-Metal Embedded C**  
 - No HAL (Hardware Abstraction Layer); relies on direct register access using **CMSIS**
 
----
 
-## 🔌 Hardware Requirements
+
+## Hardware Requirements
 
 - **STM32 NUCLEO-L476RG** development board  
 - **16 external LEDs**  

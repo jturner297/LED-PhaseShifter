@@ -1,5 +1,5 @@
 # LED PhaseShifter
-
+<img src="assets/LED-PhaseShifter thumbnail.jpg" alt="Game Thumbnail" width="500"/> 
 **LED PhaseShifter** is real-time LED control project for the **STM32L476RG** using interrupts, SysTick, and GPIO to control 16 external LEDs. Features dual operating modes: FLASH mode for alternating LED animation and MOVE mode for manual LED shifting.
 
 ## Demos

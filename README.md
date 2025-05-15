@@ -72,3 +72,7 @@ A real-time LED control project for the **STM32L476RG**, using interrupts, SysTi
 - Breadboard and jumper wires  
 - USB cable for power and programming via ST-Link
 
+
+## Block Diagram
+<img src="assets/LED-PhaseShifter_BlockDiagram.png" alt="Game Thumbnail" width="1000"/> 
+

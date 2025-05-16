@@ -12,9 +12,7 @@
 * @corresponding author: Jesse Garcia
 * @version Header for main.c module
 * ------------------------------------------------------------------------------------------------
-* Defines the constants, enums, structures, and function prototypes used for hardware configuration,
-* interrupt setup, and SysTick updates.
-*
+* Defines the constants, enums, structures, and function prototypes 
 **************************************************************************************************
 */
 #define startSysTickTimer_MACRO (SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk)
@@ -55,8 +53,10 @@ struct Light_Emitting_Diode{
 
 //Function Prototypes
 void configure_LEDS(GPIO_TypeDef *port, uint32_t pins[], uint32_t number_of_pins, uint32_t port_clock_num);
-void configure_switches(void);
+void configure_external_switches(void);
 void configureSysTickInterrupt(void);
-void updateSysTick(uint32_t ReloadValue);
+void updateARR(uint32_t ReloadValue);
+void configureTIM2(void);
+void configure_Board_Button(); 
 
 #endif /* MAIN_H */

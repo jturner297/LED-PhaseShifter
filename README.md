@@ -1,10 +1,13 @@
 
 # LED PhaseShifter  
+
 <img src="assets/LED-PhaseShifter_gif.gif" width="500" />
 
-A real-time LED control project for the **STM32L476RG**, using interrupts, SysTick, and GPIO to control 16 external LEDs. Includes two operation modes: **Flash Mode** for automatic LED animation, and **Move Mode** for manual LED shifting using button inputs.
+A real-time LED control and automation project for the **NUCLEO-L476RG** development board
 
+## Overview
 
+**LED PhaseShifter** is a project that utilizes GPIO, external interrupts, and SysTick to control 16 external LEDs. Designed for a smooth and responsive user experience, it features two operating modes: **Flash Mode** for automatic LED animation, and **Move Mode** for manual LED shifting using button inputs.
 
 ## Demos
 <table>
@@ -21,8 +24,8 @@ A real-time LED control project for the **STM32L476RG**, using interrupts, SysTi
     </td>
   </tr>
   <tr>
-    <td><sub><strong>Flash Mode Demo</strong></sub></td>
-    <td><sub><strong>Mode Switching & Move Mode Demo</strong></sub></td>
+    <td><sub><strong>Flash Mode</strong></sub></td>
+    <td><sub><strong>Mode Switching & Move Mode</strong></sub></td>
   </tr>
 </table>
 
